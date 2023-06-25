@@ -7,13 +7,12 @@ const {
    Render, 
    Runner, 
    World, 
-   Bodies,
-   MouseConstraint, 
-   Mouse 
+   Bodies
 } = Matter;
 
-const width = 800;
-const height = 600;
+const cells = 3;
+const width = 660;
+const height = 660;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -21,7 +20,7 @@ const render = Render.create({
    element: document.body,
    engine: engine,
    options: {
-      wireframes: false,
+      wireframes: true,
       width,
       height
    }
@@ -29,55 +28,70 @@ const render = Render.create({
 
 Render.run(render);
 Runner.run(Runner.create(), engine);
-World.add(world, MouseConstraint.create(engine, {
-   mouse: Mouse.create(render.canvas)
-}));
 
-// walls
+// walls;
 
 const walls = [
-   Bodies.rectangle(400, 0, 800, 40, {
+   Bodies.rectangle(width / 2, 0, width, 40, {
+      isStatic: true,
+   }),
+   Bodies.rectangle(width / 2, height, width, 40, { 
       isStatic: true
    }),
-   Bodies.rectangle(400, 600, 800, 40, { 
+   Bodies.rectangle(0, height / 2, 40, height, {
       isStatic: true
-   }),
-   Bodies.rectangle(0, 300, 40, 600, {
-      isStatic: true
-   }),
-   Bodies.rectangle(800, 300, 40, 600, {
+   }), 
+   Bodies.rectangle(width, height / 2, 40, height, {
       isStatic: true
    })
 ];
 
 World.add(world, walls);
 
-// random shapes
+// maze generation;
+ 
+const grid = Array(cells)
+   .fill(null)
+   .map(() => Array(cells).fill(false));
 
-for (let x = 0; x < 50; x++) {
-   if (Math.random() > 0.5) {
-      World.add(
-         world,
-         Bodies.rectangle(Math.random() * width, Math.random() * height, 50, 50, 
-            {
-               isStatic: false,
-               render: {
-                  fillStyle: "green"
-               }
-            }
-         )
-      );
-   } else {
-      World.add(
-         world,
-         Bodies.circle(Math.random() * width, Math.random() * height, 35, 
-            {
-               isStatic: false,
-               render: {
-                  fillStyle: "red"
-               }
-            }
-         ) 
-      );
+const verticals = Array(cells)
+   .fill(null)
+   .map(() => Array(cells - 1).fill(false));
+ 
+const horizontals = Array(cells - 1)
+   .fill(null)
+   .map(() => Array(cells).fill(false));
+
+const startRow = Math.floor(Math.random() * cells);
+const startCol = Math.floor(Math.random() * cells);
+
+const itrCells = (row, column) => {
+   // cell [row, column] is vsisted, the return;
+   if (grid[row][column]) {
+      return;
    }
-}
+
+   // mark this cell as vsisted;
+   grid[row][column] = true;
+
+   // assemble randomly ordered list of neightbors;
+   const neighbors = [
+      [row - 1, column],
+      [row, column + 1],
+      [row + 1, column],
+      [row, column - 1]
+   ]
+
+   // for each neightbor ...
+
+   // see if the neighbor is out of bounds;
+
+   // if we have visted that neighbor, continue with the next neighbor;
+
+   // remove a wall from either the verticals or the horizontals;
+
+   // visit that next cell;
+};
+
+itrCells(startRow, startCol);
+console.log(grid);
