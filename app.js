@@ -49,6 +49,20 @@ const walls = [
 World.add(world, walls);
 
 // maze generation;
+
+const shuffle = arr => {
+   let counter = arr.length;
+
+   while (counter > 0) {
+      let index = Math.floor(Math.random() * counter);
+      counter--;
+
+      const rev = arr[counter];
+      arr[counter] = arr[index];
+      arr[index] = rev;
+   }
+   return arr;
+}
  
 const grid = Array(cells)
    .fill(null)
@@ -75,23 +89,45 @@ const itrCells = (row, column) => {
    grid[row][column] = true;
 
    // assemble randomly ordered list of neightbors;
-   const neighbors = [
-      [row - 1, column],
-      [row, column + 1],
-      [row + 1, column],
-      [row, column - 1]
-   ]
+   const neighbors = shuffle([
+      [row - 1, column, "up"],
+      [row, column + 1, "right"],
+      [row + 1, column, "down"],
+      [row, column - 1, "left"]
+   ]);
 
    // for each neightbor ...
 
-   // see if the neighbor is out of bounds;
+   for (let neighbor of neighbors) {
+      const [nextRow, nextCol, direction] = neighbor;
 
-   // if we have visted that neighbor, continue with the next neighbor;
+      // see if the neighbor is out of bounds;
+      if (nextRow < 0 || 
+         nextRow >= cells || 
+         nextCol < 0 || 
+         nextCol >= cells
+      ){
+         continue;
+      }
 
-   // remove a wall from either the verticals or the horizontals;
+      // if we have visted that neighbor, continue with the next neighbor;
+      if (grid[nextRow][nextCol]) {
+         continue;
+      }
+
+      // remove a wall from either verticals or horizontals;
+      if (direction === "left") {
+         verticals[row][column - 1] = true;
+      } else if (direction === "right") {
+         verticals[row][column] = true;
+      } else  if (direction === "up") {
+         horizontals[row - 1][column] = true;
+      } else if (direction === "down") {
+         horizontals[row][column] = true;
+      }
+   }
 
    // visit that next cell;
 };
 
-itrCells(startRow, startCol);
-console.log(grid);
+itrCells(startRow, startCol); 
