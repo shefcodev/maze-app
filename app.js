@@ -13,6 +13,7 @@ const {
 const cells = 3;
 const width = 660;
 const height = 660;
+const unitLength = width / cells;
 
 const engine = Engine.create();
 const { world } = engine;
@@ -125,9 +126,21 @@ const itrCells = (row, column) => {
       } else if (direction === "down") {
          horizontals[row][column] = true;
       }
+
+      // visit that next cell;
+      itrCells(nextRow, nextCol);
    }
 
-   // visit that next cell;
 };
 
 itrCells(startRow, startCol); 
+
+horizontals.forEach((row) => {
+   row.forEach((open) => {
+      if (open) {
+         return;
+      }
+
+      const wall = Bodies.rectangle(200, 200, 200, 0);
+   });
+});
