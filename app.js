@@ -10,7 +10,7 @@ const {
    Bodies
 } = Matter;
 
-const cells = 15;
+const cells = 20;
 const width = 660;
 const height = 660;
 const unitLength = width / cells;
@@ -33,16 +33,16 @@ Runner.run(Runner.create(), engine);
 // walls;
 
 const walls = [
-   Bodies.rectangle(width / 2, 0, width, 2, {
+   Bodies.rectangle(width / 2, 0, width, 1, {
       isStatic: true,
    }),
-   Bodies.rectangle(width / 2, height, width, 2, { 
+   Bodies.rectangle(width / 2, height, width, 1, { 
       isStatic: true
    }),
-   Bodies.rectangle(0, height / 2, 2, height, {
+   Bodies.rectangle(0, height / 2, 1, height, {
       isStatic: true
    }), 
-   Bodies.rectangle(width, height / 2, 2, height, {
+   Bodies.rectangle(width, height / 2, 1, height, {
       isStatic: true
    })
 ];
@@ -178,7 +178,7 @@ const goal = Bodies.rectangle(
    width - unitLength / 2,
    height - unitLength / 2, 
    unitLength * 0.5,
-   unitLength * 0.5,
+   unitLength * 0.5, 
    {
       isStatic: true,
       render: {
