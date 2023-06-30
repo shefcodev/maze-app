@@ -13,7 +13,7 @@ const {
 } = Matter;
 
 const cellsHorizontal = 15;
-const cellsVertical = 10;
+const cellsVertical = 13;
 const width = window.innerWidth;
 const height = window.innerHeight;
 const unitLengthX = width / cellsHorizontal;
@@ -26,7 +26,7 @@ const render = Render.create({
    element: document.body,
    engine: engine,
    options: {
-      wireframes: true,
+      wireframes: false,
       width,
       height
    }
@@ -154,6 +154,9 @@ horizontals.forEach((row, rowIndex) => {
          {
             label: "wall",
             isStatic: true,
+            render: {
+               fillStyle: "grey"
+            }
          }
       );
 
@@ -175,6 +178,9 @@ verticals.forEach((row, rowIndex) => {
          {
             label: "wall",
             isStatic: true,
+            render: {
+               fillStyle: "grey"
+            }
          }
       );
 
@@ -211,7 +217,7 @@ const player = Bodies.circle(
       label: "player",
       isStatic: false,
       render: {
-         fillStyle: "green",
+         fillStyle: "grey",
       }
    }
 );
