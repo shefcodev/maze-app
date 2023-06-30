@@ -7,15 +7,20 @@ const {
    Render, 
    Runner, 
    World, 
-   Bodies
+   Bodies,
+   Body,
+   Events
 } = Matter;
 
-const cells = 20;
-const width = 660;
-const height = 660;
-const unitLength = width / cells;
+const cellsHorizontal = 4;
+const cellsVertical = 3;
+const width = window.innerWidth;
+const height = window.innerHeight;
+const unitLengthX = width / cellsHorizontal;
+const unitLengthY = height / cellsVertical;
 
 const engine = Engine.create();
+engine.world.gravity.y = 0;
 const { world } = engine;
 const render = Render.create({
    element: document.body,
@@ -33,16 +38,16 @@ Runner.run(Runner.create(), engine);
 // walls;
 
 const walls = [
-   Bodies.rectangle(width / 2, 0, width, 1, {
+   Bodies.rectangle(width / 2, 0, width, 2, {
       isStatic: true,
    }),
-   Bodies.rectangle(width / 2, height, width, 1, { 
+   Bodies.rectangle(width / 2, height, width, 2, { 
       isStatic: true
    }),
-   Bodies.rectangle(0, height / 2, 1, height, {
+   Bodies.rectangle(0, height / 2, 2, height, {
       isStatic: true
    }), 
-   Bodies.rectangle(width, height / 2, 1, height, {
+   Bodies.rectangle(width, height / 2, 2, height, {
       isStatic: true
    })
 ];
@@ -147,6 +152,7 @@ horizontals.forEach((row, rowIndex) => {
          unitLength,
          5,
          {
+            label: "wall",
             isStatic: true,
          }
       );
@@ -165,7 +171,9 @@ verticals.forEach((row, rowIndex) => {
          columnIndex * unitLength + unitLength,
          rowIndex * unitLength + unitLength / 2,
          5,
-         unitLength, {
+         unitLength, 
+         {
+            label: "wall",
             isStatic: true,
          }
       );
@@ -174,12 +182,15 @@ verticals.forEach((row, rowIndex) => {
    });
 });
 
-const goal = Bodies.rectangle(
+// target;
+
+const target = Bodies.rectangle(
    width - unitLength / 2,
    height - unitLength / 2, 
    unitLength * 0.5,
    unitLength * 0.5, 
    {
+      label: "target", 
       isStatic: true,
       render: {
          fillStyle: "green",
@@ -187,4 +198,54 @@ const goal = Bodies.rectangle(
    }
 );
 
-World.add(world, goal); 
+World.add(world, target); 
+
+// player;
+
+const player = Bodies.circle(
+   unitLength / 2,
+   unitLength / 2,
+   unitLength / 4,
+   {
+      label: "player",
+      isStatic: false,
+      render: {
+         fillStyle: "green",
+      }
+   }
+);
+
+World.add(world, player);
+
+document.addEventListener("keydown", event => {
+   const { x, y } = player.velocity;
+
+   if (event.keyCode === 38) {
+      Body.setVelocity(player, { x, y: y - 5 });
+   } else if (event.keyCode ===  39) {
+      Body.setVelocity(player, { x: x + 5, y });
+   } else if (event.keyCode === 40) {
+      Body.setVelocity(player, { x, y: y + 5 });
+   } else if (event.keyCode === 37) {
+      Body.setVelocity(player, { x: x - 5, y });
+   }
+});
+
+// Win Condition;
+
+Events.on(engine, "collisionStart", event => {
+   event.pairs.forEach(collision => {
+      const { bodyA, bodyB } = collision;
+      const label = ["player", "target"];
+
+      if (label.includes(bodyA.label) && label.includes(bodyB.label)) {
+         world.gravity.y = 1;
+
+         world.bodies.forEach(body => {
+            if (body.label === "wall") {
+               Body.setStatic(body, false);
+            }
+         });
+      }
+   });
+});
