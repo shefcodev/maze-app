@@ -14,8 +14,31 @@
          body {
             margin: 0;
          }
+
+         .hidden {
+            display: none !important;
+         }
+
+         h1 {
+            color: white;
+            font-size: 64px;
+            font-family: arial;
+         }
+
+         .winner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            z-index: 1;
+            height: 100vh;
+            width: 100vw;
+         }
       </style>
    <body>
+      <div class = "winner hidden">
+         <h1>You win!</h1>
+      </div>
       <script type = "text/javascript" charset = "UTF-8" src = "app.js"></script>
    </body>
-</html>
+</htm64

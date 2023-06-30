@@ -199,7 +199,7 @@ const target = Bodies.rectangle(
       label: "target", 
       isStatic: true,
       render: {
-         fillStyle: "green",
+         fillStyle: "grey",
       }
    }
 );
@@ -253,6 +253,8 @@ Events.on(engine, "collisionStart", event => {
                Body.setStatic(body, false);
             }
          });
+
+         document.querySelector(".winner").classList.remove("hidden");
       }
    });
 });
