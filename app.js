@@ -12,8 +12,8 @@ const {
    Events
 } = Matter;
 
-const cellsHorizontal = 4;
-const cellsVertical = 3;
+const cellsHorizontal = 15;
+const cellsVertical = 10;
 const width = window.innerWidth;
 const height = window.innerHeight;
 const unitLengthX = width / cellsHorizontal;
@@ -70,20 +70,20 @@ const shuffle = arr => {
    return arr;
 }
  
-const grid = Array(cells)
+const grid = Array(cellsVertical)
    .fill(null)
-   .map(() => Array(cells).fill(false));
+   .map(() => Array(cellsHorizontal).fill(false));
 
-const verticals = Array(cells)
+const verticals = Array(cellsVertical)
    .fill(null)
-   .map(() => Array(cells - 1).fill(false));
+   .map(() => Array(cellsHorizontal - 1).fill(false));
  
-const horizontals = Array(cells - 1)
+const horizontals = Array(cellsVertical - 1)
    .fill(null)
-   .map(() => Array(cells).fill(false));
+   .map(() => Array(cellsHorizontal).fill(false));
 
-const startRow = Math.floor(Math.random() * cells);
-const startCol = Math.floor(Math.random() * cells);
+const startRow = Math.floor(Math.random() * cellsVertical);
+const startCol = Math.floor(Math.random() * cellsHorizontal);
 
 const itrCells = (row, column) => {
    // cell [row, column] is vsisted, the return;
@@ -109,9 +109,9 @@ const itrCells = (row, column) => {
 
       // see if the neighbor is out of bounds;
       if (nextRow < 0 || 
-         nextRow >= cells || 
+         nextRow >= cellsVertical || 
          nextCol < 0 || 
-         nextCol >= cells
+         nextCol >= cellsHorizontal
       ){
          continue;
       }
@@ -147,9 +147,9 @@ horizontals.forEach((row, rowIndex) => {
       }
 
       const wall = Bodies.rectangle(
-         columnIndex * unitLength + unitLength / 2,
-         rowIndex * unitLength + unitLength,
-         unitLength,
+         columnIndex * unitLengthX + unitLengthX / 2,
+         rowIndex * unitLengthY + unitLengthY,
+         unitLengthX,
          5,
          {
             label: "wall",
@@ -168,10 +168,10 @@ verticals.forEach((row, rowIndex) => {
       }
 
       const wall = Bodies.rectangle(
-         columnIndex * unitLength + unitLength,
-         rowIndex * unitLength + unitLength / 2,
+         columnIndex * unitLengthX + unitLengthX,
+         rowIndex * unitLengthY + unitLengthY / 2,
          5,
-         unitLength, 
+         unitLengthY, 
          {
             label: "wall",
             isStatic: true,
@@ -185,10 +185,10 @@ verticals.forEach((row, rowIndex) => {
 // target;
 
 const target = Bodies.rectangle(
-   width - unitLength / 2,
-   height - unitLength / 2, 
-   unitLength * 0.5,
-   unitLength * 0.5, 
+   width - unitLengthX / 2,
+   height - unitLengthY / 2, 
+   unitLengthX * 0.5,
+   unitLengthY * 0.5, 
    {
       label: "target", 
       isStatic: true,
@@ -202,10 +202,11 @@ World.add(world, target);
 
 // player;
 
+const playerRadius = Math.min(unitLengthX, unitLengthY) / 4;
 const player = Bodies.circle(
-   unitLength / 2,
-   unitLength / 2,
-   unitLength / 4,
+   unitLengthX / 2,
+   unitLengthY / 2,
+   playerRadius,
    {
       label: "player",
       isStatic: false,
